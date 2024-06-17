@@ -43,7 +43,7 @@ void record(int s){
         send(s, buffer_rec, N, 0);
     }
     char eof = 26;
-    send(s,&eof,1,0);
+    send(s,&eof,0,0);
     fclose(fp_rec);
 }
 
@@ -90,8 +90,8 @@ void *call_thread(void *arg) {
             if(!strcmp(thread_arg->input, "rejected")){ //rejectされた
                 printf("応答が拒否されました、録音を開始いたします。\n");
                 record(s);
-                //*flag = 0;
-                exit(EXIT_SUCCESS);
+                *flag = 0;
+                //exit(EXIT_SUCCESS);
             }else if(!strcmp(thread_arg->input, "accepted")){ //acceptされた
                 *flag = 3;
                 break;
