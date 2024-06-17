@@ -13,6 +13,10 @@
 
 void record(int s){
     int N = 1024;
+    FILE *fp_play;
+    char *cmd_play = "play -t raw -b 16 -c 1 -e s -r 44100 audio/wait.raw ";
+    fp_play = popen(cmd_play, "r");
+
     //popen("play ")録音メッセージを流す
     printf("5秒後に録音を開始いたします。\n");
     sleep(5);
