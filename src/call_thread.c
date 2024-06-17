@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/socket.h>
+#include <unistd.h>
 
 void *call_thread(void *arg) {
     THREAD_ARG *thread_arg = (THREAD_ARG *)arg;
@@ -22,7 +23,9 @@ void *call_thread(void *arg) {
             }
             *flag = 1;
             send(s, data, 5, 0);
-            while (*flag != 4) {}
+            while (*flag != 4) {
+                usleep(200*1000);
+            }
             *flag = 1;
             if(!strcmp(thread_arg->input, "rejected")){ //rejectされた
                 printf("応答が拒否されました\n");

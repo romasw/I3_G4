@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
+#include <unistd.h>
 
 void *wait_thread(void *arg) {
     THREAD_ARG *thread_arg = (THREAD_ARG *)arg;
@@ -24,7 +25,9 @@ void *wait_thread(void *arg) {
             if(!strcmp(buffer, "call")){// wait for the call
                 printf("Would you accept this call?\n");
                 *flag = 2;
-                while(*flag != 4){}
+                while(*flag != 4){
+                    usleep(200*1000);
+                }
                 *flag = 2;
                 if(!strcmp(thread_arg->input, "yes")){
                     send(s, sample_yes, strlen(sample_yes), 0);
