@@ -6,13 +6,13 @@
 
 typedef struct thread_arg { 
     int s;
-    int * shift;
+    int shift;
 } TALK_THREAD_ARG;
 
 void *rec_send_thread(void *arg) {
     TALK_THREAD_ARG *thread_arg = (TALK_THREAD_ARG *)arg;
     int s = thread_arg->s;
-    int* shift = thread_arg->shift;
+    int shift = thread_arg->shift;
     FILE *fp_rec;
     char *cmd_rec = "rec -t raw -b 16 -c 1 -e s -r 44100 -";
     fp_rec = popen(cmd_rec, "r");

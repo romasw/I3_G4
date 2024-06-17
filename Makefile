@@ -21,7 +21,7 @@ src/band_shift.o: src/band_shift.c
 	$(CC) -I./include -c -o src/band_shift.o src/band_shift.c
 
 src/talk_session.o: src/talk_session.c src/band_shift.c
-	$(CC) -I./include -c -o src/talk_session.o src/talk_session.c src/band_shift.c
+	$(CC) -I./include -c -o src/talk_session.o src/talk_session.c
 
 .PHONY: clean
 clean:

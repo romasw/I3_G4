@@ -20,7 +20,7 @@ int main(int argc, char ** argv){
     THREAD_ARG thread_arg;
     thread_arg.flag = pflag;
     thread_arg.s = s;
-    thread_arg.shift = shift;
+    thread_arg.shift = *shift;
     strcpy(thread_arg.input, "");
 
     if(pthread_create(&thread_call, NULL, call_thread, (void *)&thread_arg) != 0) {
