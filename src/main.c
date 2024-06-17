@@ -8,7 +8,7 @@
 #include "call_thread.h"
 #include "wait_thread.h"
 #include "talk_session.h"
-
+//IP: YR 10.100.235.229
 int main(int argc, char ** argv){
     int s = setup(argc, argv);
 
