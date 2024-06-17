@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-int setup(int argc, char **argv, int* shift){
+int setup(int argc, char **argv){
     int s;
     struct sockaddr_in addr;
         addr.sin_family = AF_INET;
@@ -18,7 +18,6 @@ int setup(int argc, char **argv, int* shift){
         struct sockaddr_in client_addr;
         socklen_t len = sizeof(struct sockaddr_in);
         s = accept(ss, (struct sockaddr *)&client_addr, &len);
-        *shift = atoi(argv[2]);
     }else if(argc == 4){
         s = socket(PF_INET, SOCK_STREAM, 0);
         if (inet_aton(argv[1], &addr.sin_addr) == 0){
@@ -27,7 +26,6 @@ int setup(int argc, char **argv, int* shift){
         }
         addr.sin_port = htons(atoi(argv[2]));
         connect(s, (struct sockaddr *)&addr, sizeof(addr));
-        *shift = atoi(argv[3]);
     }else{
         perror("usage: ./i1i2i3_phone [IP ADDRESS] [PORT] [SHIFT] or ./i1i2i3_phone [PORT] [SHIFT]");
         exit(EXIT_FAILURE);

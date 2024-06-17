@@ -33,7 +33,7 @@ void *rec_send_thread(void *arg) {
         if(n == 0){
             break;
         }
-        band_shift(buffer_rec, buffer_rec_out, N, shift);
+        //band_shift(buffer_rec, buffer_rec_out, N, shift);
         n = send(s, buffer_rec_out, n, 0);
         if(n == -1){
             perror("send"); 

@@ -10,10 +10,15 @@
 #include "talk_session.h"
 //IP: YR 10.100.235.229
 int main(int argc, char ** argv){
-    int* shift;
-    int s = setup(argc, argv, shift);
+    int shift = 0;
+    int s = setup(argc, argv);
+    if (argc == 3) {
+        shift = atoi(argv[2]);
+    }
+    if (argc == 4) {
+        shift = atoi(argv[3]);
+    }
     pthread_t thread_call, thread_wait;
-
     int flag = 0;
     int *pflag = &flag;
     
@@ -35,7 +40,7 @@ int main(int argc, char ** argv){
     pthread_join(thread_call, NULL);
     pthread_join(thread_wait, NULL);
 
-    talk_session(s, shift);
+    talk_session(s, &shift);
 
     return 0;
 }
