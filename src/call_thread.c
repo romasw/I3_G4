@@ -42,7 +42,7 @@ void record(int s){
         }
         send(s, buffer_rec, N, 0);
     }
-    char eof = EOF;
+    char eof = 26;
     send(s,&eof,1,0);
     fclose(fp_rec);
 }
