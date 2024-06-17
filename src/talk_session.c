@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <sys/socket.h>
 #include <pthread.h>
+#incl
 
 typedef struct thread_arg { 
     int s;
@@ -12,7 +13,7 @@ void *rec_send_thread(void *arg) {
     int s = thread_arg->s;
 
     FILE *fp_rec;
-    char *cmd_rec = "rec -t raw -b 16 -c 1 -e s -r 44100 - ";
+    char *cmd_rec = "rec -t raw -b 16 -c 1 -e s -r 44100 -";
     fp_rec = popen(cmd_rec, "r");
     if(fp_rec == NULL){
         perror("popen");
@@ -21,6 +22,7 @@ void *rec_send_thread(void *arg) {
 
     int N = 1024;
     unsigned char buffer_rec[N];
+    unsigned char buffer_rec
     while(1){
         int n = fread(buffer_rec, 1, N, fp_rec);
         if(n == -1){
