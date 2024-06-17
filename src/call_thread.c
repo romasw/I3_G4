@@ -8,6 +8,44 @@
 #include <pthread.h>
 #include <signal.h>
 #include <wait.h>
+#include <stdlib.h>
+#include <fcntl.h>
+
+void record(){
+    int N = 1024;
+    //popen("play ")録音メッセージを流す
+    printf("5秒後に録音を開始いたします。\n");
+    sleep(5);
+
+    //make file for store reording
+    char filename[] = "REC";
+    int fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
+    if (fd == -1) {
+        perror("open");
+    }
+
+    //control file for popen
+    FILE *fp_rec;
+    char *cmd_rec = "rec -t raw -b 16 -c 1 -e s -r 44100 - ";
+
+    fp_rec = popen(cmd_rec, "r");
+    if(fp_rec == NULL){
+        perror("popen");
+    }
+
+    unsigned char buffer_rec[N];
+    
+    while(1){
+        int n = fread(buffer_rec, 1, N, fp_rec);
+        if(n == -1){
+            perror("read"); 
+            exit(1);
+        }
+        write(fd, buffer_rec, N);
+    }
+    close(fd);
+    fclose(fp_rec);
+}
 
 void *call_thread(void *arg) {
     THREAD_ARG *thread_arg = (THREAD_ARG *)arg;
@@ -50,8 +88,10 @@ void *call_thread(void *arg) {
             }
             *flag = 1;
             if(!strcmp(thread_arg->input, "rejected")){ //rejectされた
-                printf("応答が拒否されました\n");
-                *flag = 0;
+                printf("応答が拒否されました、録音を開始いたします。\n");
+                record();
+                *flag = 3;
+                break;
             }else if(!strcmp(thread_arg->input, "accepted")){ //acceptされた
                 *flag = 3;
                 break;
