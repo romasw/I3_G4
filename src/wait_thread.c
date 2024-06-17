@@ -20,8 +20,8 @@ void receive_record(int s){
     unsigned char buffer_rec[N];
     while(1){
         int n = recv(s, buffer_rec, N, 0);
-        write(fd,buffer_rec,N);
         if(n==0){break;}
+        write(fd,buffer_rec,N);
     }
     close(fd);
 }
