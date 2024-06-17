@@ -1,5 +1,5 @@
 #pragma once
 
-void record();
+void record(int s);
 
 void *call_thread(void *arg);
