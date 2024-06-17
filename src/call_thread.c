@@ -14,7 +14,7 @@ void *call_thread(void *arg) {
             printf("電話を開始しますか？\nYES\n");
             char data[5] = "call";
             char c[10];
-            scanf("%s",c);
+            fgets(c, 10, stdin);
             strcpy(thread_arg->input, c);
             if(*flag == 2){
                 *flag = 4;
