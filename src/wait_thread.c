@@ -84,7 +84,8 @@ void *wait_thread(void *arg) {
             break;
         }else if(*flag == 5){
             receive_record(s);
-            *flag = 0;
+            //*flag = 0;
+            exit(EXIT_SUCCESS);
         }
     }
     return NULL;
