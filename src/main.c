@@ -36,7 +36,7 @@ int main(int argc, char ** argv){
     pthread_join(thread_call, NULL);
     pthread_join(thread_wait, NULL);
 
-    talk_session(s);
+    talk_session(s, shift);
 
     return 0;
 }

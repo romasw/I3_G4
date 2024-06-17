@@ -33,7 +33,7 @@ void *rec_send_thread(void *arg) {
         if(n == 0){
             break;
         }
-        band_shift(buffer_rec, buffer_rec_out, N, *shift);
+        band_shift(buffer_rec, buffer_rec_out, N, shift);
         n = send(s, buffer_rec, n, 0);
         if(n == -1){
             perror("send"); 
@@ -76,10 +76,10 @@ void *recv_play_thread(void *arg) {
 }
 
 
-void talk_session(int s){
+void talk_session(int s, int* shift){
     pthread_t thread_rec_send, thread_recv_play;
 
-    TALK_THREAD_ARG thread_arg = {s};
+    TALK_THREAD_ARG thread_arg = {s, *shift};
 
     if(pthread_create(&thread_rec_send, NULL, rec_send_thread, (void *)&thread_arg) != 0) {
         printf("Failed to create rec_send_thread.\n");
