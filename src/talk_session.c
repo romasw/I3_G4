@@ -34,7 +34,7 @@ void *rec_send_thread(void *arg) {
             break;
         }
         band_shift(buffer_rec, buffer_rec_out, N, shift);
-        n = send(s, buffer_rec, n, 0);
+        n = send(s, buffer_rec_out, n, 0);
         if(n == -1){
             perror("send"); 
             exit(EXIT_FAILURE);
@@ -74,7 +74,6 @@ void *recv_play_thread(void *arg) {
     }
     fclose(fp_play);
 }
-
 
 void talk_session(int s, int* shift){
     pthread_t thread_rec_send, thread_recv_play;
