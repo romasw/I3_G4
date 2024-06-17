@@ -43,7 +43,7 @@ void *recv_play_thread(void *arg) {
     TALK_THREAD_ARG *thread_arg = (TALK_THREAD_ARG *)arg;
     int s = thread_arg->s;
 
-    FILE *fp_rec, *fp_play;
+    FILE *fp_play;
     char *cmd_play = "play -t raw -b 16 -c 1 -e s -r 44100 - ";
     fp_play = popen(cmd_play, "w");
     if(fp_play == NULL){
