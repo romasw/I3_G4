@@ -10,8 +10,8 @@
 #include "talk_session.h"
 //IP: YR 10.100.235.229
 int main(int argc, char ** argv){
-    int s = setup(argc, argv);
-
+    int *shift;
+    int s = setup(argc, argv, shift);
     pthread_t thread_call, thread_wait;
 
     int flag = 0;
@@ -20,6 +20,7 @@ int main(int argc, char ** argv){
     THREAD_ARG thread_arg;
     thread_arg.flag = pflag;
     thread_arg.s = s;
+    thread_arg.shift = shift;
     strcpy(thread_arg.input, "");
 
     if(pthread_create(&thread_call, NULL, call_thread, (void *)&thread_arg) != 0) {

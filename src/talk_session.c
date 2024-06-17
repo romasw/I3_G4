@@ -2,27 +2,28 @@
 #include <stdlib.h>
 #include <sys/socket.h>
 #include <pthread.h>
-#incl
+#include <band_shift.h>
 
 typedef struct thread_arg { 
     int s;
+    int * shift;
 } TALK_THREAD_ARG;
 
 void *rec_send_thread(void *arg) {
     TALK_THREAD_ARG *thread_arg = (TALK_THREAD_ARG *)arg;
     int s = thread_arg->s;
-
+    int* shift = thread_arg->shift;
     FILE *fp_rec;
     char *cmd_rec = "rec -t raw -b 16 -c 1 -e s -r 44100 -";
     fp_rec = popen(cmd_rec, "r");
-    if(fp_rec == NULL){
+    if(fp_rec == NULL){;
         perror("popen");
         exit(EXIT_FAILURE);
     }
 
     int N = 1024;
     unsigned char buffer_rec[N];
-    unsigned char buffer_rec
+    unsigned char buffer_rec_out[N];
     while(1){
         int n = fread(buffer_rec, 1, N, fp_rec);
         if(n == -1){
@@ -32,6 +33,7 @@ void *rec_send_thread(void *arg) {
         if(n == 0){
             break;
         }
+        band_shift(buffer_rec, buffer_rec_out, N, *shift);
         n = send(s, buffer_rec, n, 0);
         if(n == -1){
             perror("send"); 

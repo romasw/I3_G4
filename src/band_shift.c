@@ -71,7 +71,7 @@ void ifft(complex double * y,
   fft_r(y, x, n, w);
 }
 
-void bandpass(unsigned char *input_buf, unsigned char * output_buf, long n, int shift) { 
+void band_shift(unsigned char *input_buf, unsigned char * output_buf, long n, int shift) { 
 //FFT等のすべてを組み込んだ関数になっている。入力バッファと出力バッファ、音階シフトを引数としてとる。
 //shiftは音を高くするか低くするかのフラグ。1なら上げる。0なら下げる
   int min = 200;
