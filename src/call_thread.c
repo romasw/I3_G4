@@ -9,7 +9,6 @@
 #include <signal.h>
 #include <wait.h>
 #include <stdlib.h>
-#include <fcntl.h>
 #include <time.h>
 
 void record(int s){
@@ -17,15 +16,6 @@ void record(int s){
     //popen("play ")録音メッセージを流す
     printf("5秒後に録音を開始いたします。\n");
     sleep(5);
-
-    //make file for store reording
-    char filename[] = "REC";
-    /*
-    int fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
-    if (fd == -1) {
-        perror("open");
-    }
-    */
 
     //control file for popen
     FILE *fp_rec;
