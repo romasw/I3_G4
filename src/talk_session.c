@@ -14,7 +14,11 @@ void *rec_send_thread(void *arg) {
     int s = thread_arg->s;
     int shift = thread_arg->shift;
     FILE *fp_rec;
+<<<<<<< HEAD
     char *cmd_rec = "rec -q -V0 -t raw -b 16 -c 1 -e s -r 44100 - 2>/dev/null";
+=======
+    char *cmd_rec = "rec -t raw -b 8 -c 1 -e un -r 44100 - ";
+>>>>>>> 44e7692 (change sox command)
     fp_rec = popen(cmd_rec, "r");
     if(fp_rec == NULL){
         perror("popen");
