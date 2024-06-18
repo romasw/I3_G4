@@ -50,9 +50,9 @@ void ifft(complex double *y, complex double *x, long n) {
 }
 
 void band_shift(unsigned char *input_buf, unsigned char *output_buf, long n, int shift) {
-    int min = 200;
-    int max = 3000;
-    double fs = 44100;
+    int min = 30;  // フィルタリングの最小周波数
+    int max = 3000; // フィルタリングの最大周波数
+    double fs = 44100; // サンプリング周波数
     double freq_bin = fs / n;
 
     // メモリ確保
@@ -67,6 +67,7 @@ void band_shift(unsigned char *input_buf, unsigned char *output_buf, long n, int
 
     // 入力を複素数に変換
     sample_to_complex(input_buf, X, n);
+
     // FFT
     fft(X, Y, n);
 
@@ -118,15 +119,17 @@ void band_shift(unsigned char *input_buf, unsigned char *output_buf, long n, int
     // 逆FFT
     ifft(Y, X, n);
 
-    // スケーリングとクリッピング
-    for (long i = 0; i < n; i++) {
-        X[i] = creal(X[i]) / n;  // スケーリング（逆FFTの後の結果を正規化）
-        if (creal(X[i]) < 0) X[i] = 0;     // クリッピング（負の値をゼロに）
-        if (creal(X[i]) > 255) X[i] = 255; // クリッピング（255を超える値を255に）
-    }
-
     // 標本の配列に変換
-    complex_to_sample(X, output_buf, n);
+    // ここでスケーリングとクリッピングを行う
+    for (long i = 0; i < n; i++) {
+        double value = creal(X[i]);
+        // スケーリング
+        value /= n;
+        // クリッピング
+        if (value < 0) value = 0;
+        if (value > 255) value = 255;
+        output_buf[i] = (unsigned char)value;
+    }
 
     // メモリ解放
     free(X);
