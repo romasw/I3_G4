@@ -2,3 +2,4 @@ bin/*
 src/*.o
 REC.raw
 .vscode
+.DS_Store
