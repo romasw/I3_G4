@@ -117,6 +117,14 @@ void band_shift(unsigned char *input_buf, unsigned char *output_buf, long n, int
 
     // 逆FFT
     ifft(Y, X, n);
+
+    // スケーリングとクリッピング
+    for (long i = 0; i < n; i++) {
+        X[i] = creal(X[i]) / n;  // スケーリング（逆FFTの後の結果を正規化）
+        if (creal(X[i]) < 0) X[i] = 0;     // クリッピング（負の値をゼロに）
+        if (creal(X[i]) > 255) X[i] = 255; // クリッピング（255を超える値を255に）
+    }
+
     // 標本の配列に変換
     complex_to_sample(X, output_buf, n);
 
