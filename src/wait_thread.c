@@ -6,7 +6,7 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <signal.h>
-#include <wait.h>
+#include <sys/wait.h>
 #include <fcntl.h>
 
 void receive_record(int s){

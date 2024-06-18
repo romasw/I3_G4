@@ -7,7 +7,7 @@
 #include <unistd.h>
 #include <pthread.h>
 #include <signal.h>
-#include <wait.h>
+#include <sys/wait.h>
 #include <stdlib.h>
 #include <time.h>
 
