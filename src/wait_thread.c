@@ -60,7 +60,7 @@ void *wait_thread(void *arg) {
                     exit(EXIT_FAILURE);
                 } else {
                     while (*flag != 4) {
-                        usleep(200*1000);
+                        usleep(10*1000);
                     }
                     kill(pid, SIGTERM); // 子プロセスを停止
                     wait(NULL);
@@ -69,6 +69,7 @@ void *wait_thread(void *arg) {
                 if(!strcmp(thread_arg->input, "yes\n")){
                     send(s, sample_yes, strlen(sample_yes), 0);
                     *flag = 3;
+                    usleep(700*1000);
                     break;
                 }// yes: break and start a call
                 else{

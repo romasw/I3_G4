@@ -89,7 +89,7 @@ void *call_thread(void *arg) {
             } else {
                 printf("\033[2JNOW CALLING...\n");
                 while (*flag != 4) {
-                    usleep(200*1000);
+                    usleep(10*1000);
                 }
                 kill(pid, SIGTERM); // 子プロセスを停止
                 wait(NULL);
