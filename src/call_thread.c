@@ -18,7 +18,7 @@ void record(int s){
     fp_play = popen(cmd_play, "r");
 
     //popen("play ")録音メッセージを流す
-    system("clear");
+    printf("\033[0;0H\033[0J");
     printf("RECORDING STARTS IN 5 SECONDS.\n");
     sleep(5);
 
@@ -34,7 +34,7 @@ void record(int s){
     unsigned char buffer_rec[N];
     clock_t start_time = clock();
 
-    system("clear");
+    printf("\033[0;0H\033[0J");
     printf("NOW RECORDING...\n\n");
     while(1){
         clock_t current_time = clock();
@@ -54,7 +54,7 @@ void record(int s){
     }
     char eof = 26;
     send(s,&eof,0,0);
-    system("clear");
+    printf("\033[0;0H\033[0J");
     printf("YOUR MESSAGE HAS BEEN SENT.\n");
     fclose(fp_rec);
 }
@@ -68,7 +68,7 @@ void *call_thread(void *arg) {
 
     while(1){
         if(*flag == 0){
-            system("clear");
+            printf("\033[0;0H\033[0J");
             printf("PRESS ENTER TO START A CALL\n");
             char data[5] = "call";
             char c[10];
@@ -91,7 +91,7 @@ void *call_thread(void *arg) {
                 perror("execlp");
                 exit(EXIT_FAILURE);
             } else {
-                system("clear");
+                printf("\033[0;0H\033[0J");
                 printf("NOW CALLING...\n");
                 while (*flag != 4) {
                     usleep(10*1000);
@@ -101,7 +101,7 @@ void *call_thread(void *arg) {
             }
             *flag = 1;
             if(!strcmp(thread_arg->input, "rejected")){ //rejectされた
-                system("clear");
+                printf("\033[0;0H\033[0J");
                 printf("YOU GOT NO RESPONSE. LEAVE A MESSAGE.\n");
                 record(s);
                 //*flag = 0;
