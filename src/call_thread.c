@@ -18,7 +18,7 @@ void record(int s){
     fp_play = popen(cmd_play, "r");
 
     //popen("play ")録音メッセージを流す
-    printf("5秒後に録音を開始いたします。\n");
+    printf("RECORDING STARTS IN 5 SECONDS.\n");
     sleep(5);
 
     //control file for popen
@@ -48,6 +48,7 @@ void record(int s){
     }
     char eof = 26;
     send(s,&eof,0,0);
+    printf("YOUR MESSAGE HAS BEEN SENT.\n");
     fclose(fp_rec);
 }
 
@@ -82,6 +83,7 @@ void *call_thread(void *arg) {
                 perror("execlp");
                 exit(EXIT_FAILURE);
             } else {
+                printf("NOW CALLING...\n");
                 while (*flag != 4) {
                     usleep(200*1000);
                 }

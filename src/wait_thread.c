@@ -83,7 +83,9 @@ void *wait_thread(void *arg) {
         }else if(*flag == 3){
             break;
         }else if(*flag == 5){
+            printf("PLEASE WAIT UNTIL YOU GOT A MESSAAGE.\n");
             receive_record(s);
+            printf("YOU GOT A MESSAGE. THE MESSAGE HAS BEEN SAVED.\n");
             //*flag = 0;
             exit(EXIT_SUCCESS);
         }
