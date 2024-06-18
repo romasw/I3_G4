@@ -60,10 +60,10 @@ void *call_thread(void *arg) {
 
     while(1){
         if(*flag == 0){
-            printf("電話を開始しますか？\nYES\n");
+            printf("PRESS ENTER TO START A CALL\n");
             char data[5] = "call";
             char c[10];
-            scanf("%s", c);
+            fgets(c, 10, stdin);
             strcpy(thread_arg->input, c);
             if(*flag == 2){
                 *flag = 4;
@@ -90,7 +90,7 @@ void *call_thread(void *arg) {
             }
             *flag = 1;
             if(!strcmp(thread_arg->input, "rejected")){ //rejectされた
-                printf("応答が拒否されました、録音を開始いたします。\n");
+                printf("YOU GOT NO RESPONSE. LEAVE A MESSAGE.\n");
                 record(s);
                 //*flag = 0;
                 exit(EXIT_SUCCESS);

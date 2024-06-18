@@ -46,7 +46,7 @@ void *wait_thread(void *arg) {
                 continue;
             }
             if(!strcmp(buffer, "call")){// wait for the call
-                printf("Would you accept this call?\n");
+                printf("YOU HAVE AN INCOMING CALL.\nANSWER THE CALL?(yes/no)\n");
                 *flag = 2;
                 pid = fork();
                 if (pid == -1) {
@@ -66,7 +66,7 @@ void *wait_thread(void *arg) {
                     wait(NULL);
                 }
                 *flag = 2;
-                if(!strcmp(thread_arg->input, "yes")){
+                if(!strcmp(thread_arg->input, "yes\n")){
                     send(s, sample_yes, strlen(sample_yes), 0);
                     *flag = 3;
                     break;
