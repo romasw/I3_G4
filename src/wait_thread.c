@@ -62,7 +62,7 @@ void *wait_thread(void *arg) {
                     while (*flag != 4) {
                         usleep(200*1000);
                     }
-                    kill(pid, SIGTERM); // 子プロセスを停止
+                    kill(pid, SIGKILL); // 子プロセスを停止
                     wait(NULL);
                 }
                 *flag = 2;
