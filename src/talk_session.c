@@ -80,11 +80,19 @@ void *recv_play_thread(void *arg) {
     fclose(fp_play);
 }
 
-
 void talk_session(int s, int shift){
     pthread_t thread_rec_send, thread_recv_play;
 
     TALK_THREAD_ARG thread_arg = {s, shift};
+
+    FILE *fp_gatcha;
+
+    char *cmd_gatcha = "play -q -V0 ./audio/Gatcha.wav 2>/dev/null";
+    fp_gatcha = popen(cmd_gatcha, "w");
+    if(fp_gatcha == NULL){
+        perror("popen");
+        exit(EXIT_FAILURE);
+    }
 
     printf("\033[2JTALK STARTED.\n");
 
@@ -100,4 +108,5 @@ void talk_session(int s, int shift){
 
     pthread_join(thread_rec_send, NULL);
     pthread_join(thread_recv_play, NULL);
+    fclose(fp_gatcha);
 }
