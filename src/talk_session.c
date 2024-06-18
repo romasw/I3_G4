@@ -12,7 +12,7 @@ void *rec_send_thread(void *arg) {
     int s = thread_arg->s;
 
     FILE *fp_rec;
-    char *cmd_rec = "rec -q -t raw -b 16 -c 1 -e s -r 44100 - ";
+    char *cmd_rec = "rec -q -V0 -t raw -b 16 -c 1 -e s -r 44100 - ";
     fp_rec = popen(cmd_rec, "r");
     if(fp_rec == NULL){
         perror("popen");
@@ -44,7 +44,7 @@ void *recv_play_thread(void *arg) {
     int s = thread_arg->s;
 
     FILE *fp_play;
-    char *cmd_play = "play -q -t raw -b 16 -c 1 -e s -r 44100 - ";
+    char *cmd_play = "play -q -V0 -t raw -b 16 -c 1 -e s -r 44100 - ";
     fp_play = popen(cmd_play, "w");
     if(fp_play == NULL){
         perror("popen");

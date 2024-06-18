@@ -14,7 +14,7 @@
 void record(int s){
     int N = 1024;
     FILE *fp_play;
-    char *cmd_play = "play -q -t raw -b 16 -c 1 -e s -r 44100 audio/wait.raw ";
+    char *cmd_play = "play -q -V0 -t raw -b 16 -c 1 -e s -r 44100 audio/wait.raw ";
     fp_play = popen(cmd_play, "r");
 
     //popen("play ")録音メッセージを流す
@@ -23,7 +23,7 @@ void record(int s){
 
     //control file for popen
     FILE *fp_rec;
-    char *cmd_rec = "rec -q -t raw -b 16 -c 1 -e s -r 44100 - ";
+    char *cmd_rec = "rec -q -V0 -t raw -b 16 -c 1 -e s -r 44100 - ";
 
     fp_rec = popen(cmd_rec, "r");
     if(fp_rec == NULL){
@@ -31,8 +31,9 @@ void record(int s){
     }
 
     unsigned char buffer_rec[N];
-
     clock_t start_time = clock();
+
+    printf("\033[2JNOW RECORDING...\n\n");
     while(1){
         clock_t current_time = clock();
         double elapsed_time = (double)(current_time - start_time) / CLOCKS_PER_SEC;
@@ -45,6 +46,9 @@ void record(int s){
             exit(1);
         }
         send(s, buffer_rec, N, 0);
+
+        printf("\033[1A\033[2K");
+        printf("REMAINING: %.2f s\n", 10.0-elapsed_time);
     }
     char eof = 26;
     send(s,&eof,0,0);
@@ -79,7 +83,7 @@ void *call_thread(void *arg) {
             }
             if (pid == 0) {
                 // 子プロセス: sox playコマンドを実行
-                execlp("play", "play", "-q", "./audio/yobidasi.wav", "repeat", "10",  (char *)NULL);
+                execlp("play", "play", "-q", "-V0" ,"./audio/yobidasi.wav", "repeat", "10",  (char *)NULL);
                 perror("execlp");
                 exit(EXIT_FAILURE);
             } else {
