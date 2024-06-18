@@ -55,7 +55,7 @@ void *wait_thread(void *arg) {
                 }
                 if (pid == 0) {
                     // 子プロセス: sox playコマンドを実行
-                    execl("/bin/sh", "sh", "-c", "play -q ./audio/chakusin.wav repeat 10 2>/dev/null", (char *)NULL);
+                    execlp("play", "play", "-q", "-V0" ,"./audio/chakusin.wav", "repeat", "10",  (char *)NULL);
                     perror("execlp");
                     exit(EXIT_FAILURE);
                 } else {
