@@ -48,7 +48,7 @@ void *wait_thread(void *arg) {
         continue;
       }
       if (!strcmp(buffer, "call")) { // wait for the call
-        printf("\033[0;0H\033[0J");
+        printf("\033[H\033[J");
         printf("YOU HAVE AN INCOMING CALL.\nANSWER THE CALL?(yes/no)\n");
         *flag = 2;
         pid = fork();
@@ -88,10 +88,10 @@ void *wait_thread(void *arg) {
     } else if (*flag == 3) {
       break;
     } else if (*flag == 5) {
-      printf("\033[0;0H\033[0J");
+      printf("\033[H\033[J");
       printf("PLEASE WAIT UNTIL YOU GOT A MESSAAGE.\n");
       receive_record(s);
-      printf("\033[0;0H\033[0J");
+      printf("\033[H\033[J");
       printf("YOU GOT A MESSAGE. THE MESSAGE HAS BEEN SAVED.\n");
       //*flag = 0;
       exit(EXIT_SUCCESS);

@@ -94,7 +94,7 @@ void talk_session(int s, int shift) {
     exit(EXIT_FAILURE);
   }
 
-  printf("\033[0;0H\033[0J");
+  printf("\033[H\033[J");
   printf("TALK STARTED.\n");
 
   if (pthread_create(&thread_rec_send, NULL, rec_send_thread,
