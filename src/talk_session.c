@@ -5,6 +5,7 @@
 
 typedef struct thread_arg { 
     int s;
+    int shift;
 } TALK_THREAD_ARG;
 
 void *rec_send_thread(void *arg) {
@@ -72,10 +73,10 @@ void *recv_play_thread(void *arg) {
 }
 
 
-void talk_session(int s){
+void talk_session(int s, int shift){
     pthread_t thread_rec_send, thread_recv_play;
 
-    TALK_THREAD_ARG thread_arg = {s};
+    TALK_THREAD_ARG thread_arg = {s, shift};
 
     printf("\033[2JTALK STARTED.\n");
 
