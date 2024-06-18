@@ -73,7 +73,7 @@ void *wait_thread(void *arg) {
         if (!strcmp(thread_arg->input, "yes\n")) {
           send(s, sample_yes, strlen(sample_yes), 0);
           *flag = 3;
-          usleep(700 * 1000);
+          usleep(400 * 1000);
           break;
         } // yes: break and start a call
         else {
