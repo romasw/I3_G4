@@ -31,12 +31,12 @@ int main(int argc, char ** argv){
     strcpy(thread_arg.input, "");
 
     if(pthread_create(&thread_call, NULL, call_thread, (void *)&thread_arg) != 0) {
-        printf("\033[2JFailed to create thread 1.\n");
+        printf("Failed to create thread 1.\n");
         return 1;
     }
 
     if(pthread_create(&thread_wait, NULL, wait_thread, (void *)&thread_arg) != 0) {
-        printf("\033[2JFailed to create thread 2.\n");
+        printf("Failed to create thread 2.\n");
         return 1;
     }
 
