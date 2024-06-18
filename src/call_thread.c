@@ -38,7 +38,7 @@ void *call_thread(void *arg) {
             }
             if (pid == 0) {
                 // 子プロセス: sox playコマンドを実行
-                execlp("play", "play", "./audio/yobidasi.wav", (char *)NULL);
+                execlp("play", "play", "-q", "./audio/yobidasi.wav", "repeat", "10", (char *)NULL);
                 perror("execlp");
                 exit(EXIT_FAILURE);
             } else {
