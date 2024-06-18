@@ -12,7 +12,7 @@ void *rec_send_thread(void *arg) {
     int s = thread_arg->s;
 
     FILE *fp_rec;
-    char *cmd_rec = "rec -t raw -b 16 -c 1 -e s -r 44100 - ";
+    char *cmd_rec = "rec -q -V0 -t raw -b 16 -c 1 -e s -r 44100 - 2>/dev/null";
     fp_rec = popen(cmd_rec, "r");
     if(fp_rec == NULL){
         perror("popen");
@@ -44,7 +44,7 @@ void *recv_play_thread(void *arg) {
     int s = thread_arg->s;
 
     FILE *fp_play;
-    char *cmd_play = "play -t raw -b 16 -c 1 -e s -r 44100 - ";
+    char *cmd_play = "play -q -V0 -t raw -b 16 -c 1 -e s -r 44100 - 2>/dev/null";
     fp_play = popen(cmd_play, "w");
     if(fp_play == NULL){
         perror("popen");
@@ -77,13 +77,15 @@ void talk_session(int s){
 
     TALK_THREAD_ARG thread_arg = {s};
 
+    printf("\033[2JTALK STARTED.\n");
+
     if(pthread_create(&thread_rec_send, NULL, rec_send_thread, (void *)&thread_arg) != 0) {
-        printf("Failed to create rec_send_thread.\n");
+        printf("\033[2JFailed to create rec_send_thread.\n");
         exit(EXIT_FAILURE);
     }
 
     if(pthread_create(&thread_recv_play, NULL, recv_play_thread, (void *)&thread_arg) != 0) {
-        printf("Failed to create recv_play_thread.\n");
+        printf("\033[2JFailed to create recv_play_thread.\n");
         exit(EXIT_FAILURE);
     }
 

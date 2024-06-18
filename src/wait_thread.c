@@ -46,7 +46,7 @@ void *wait_thread(void *arg) {
                 continue;
             }
             if(!strcmp(buffer, "call")){// wait for the call
-                printf("Would you accept this call?\n");
+                printf("\033[2JYOU HAVE AN INCOMING CALL.\nANSWER THE CALL?(yes/no)\n");
                 *flag = 2;
                 pid = fork();
                 if (pid == -1) {
@@ -55,7 +55,7 @@ void *wait_thread(void *arg) {
                 }
                 if (pid == 0) {
                     // 子プロセス: sox playコマンドを実行
-                    execlp("play", "play", "-q", "./audio/chakusin.wav", "repeat", "10", (char *)NULL);
+                    execl("/bin/sh", "sh", "-c", "play -q ./audio/chakusin.wav repeat 10 2>/dev/null", (char *)NULL);
                     perror("execlp");
                     exit(EXIT_FAILURE);
                 } else {
@@ -66,7 +66,7 @@ void *wait_thread(void *arg) {
                     wait(NULL);
                 }
                 *flag = 2;
-                if(!strcmp(thread_arg->input, "yes")){
+                if(!strcmp(thread_arg->input, "yes\n")){
                     send(s, sample_yes, strlen(sample_yes), 0);
                     *flag = 3;
                     break;
@@ -83,7 +83,9 @@ void *wait_thread(void *arg) {
         }else if(*flag == 3){
             break;
         }else if(*flag == 5){
+            printf("\033[2JPLEASE WAIT UNTIL YOU GOT A MESSAAGE.\n");
             receive_record(s);
+            printf("\033[2JYOU GOT A MESSAGE. THE MESSAGE HAS BEEN SAVED.\n");
             //*flag = 0;
             exit(EXIT_SUCCESS);
         }

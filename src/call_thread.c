@@ -14,16 +14,16 @@
 void record(int s){
     int N = 1024;
     FILE *fp_play;
-    char *cmd_play = "play -t raw -b 16 -c 1 -e s -r 44100 audio/wait.raw ";
+    char *cmd_play = "play -q -V0 -t raw -b 16 -c 1 -e s -r 44100 audio/wait.raw ";
     fp_play = popen(cmd_play, "r");
 
     //popen("play ")録音メッセージを流す
-    printf("5秒後に録音を開始いたします。\n");
+    printf("\033[2JRECORDING STARTS IN 5 SECONDS.\n");
     sleep(5);
 
     //control file for popen
     FILE *fp_rec;
-    char *cmd_rec = "rec -t raw -b 16 -c 1 -e s -r 44100 - ";
+    char *cmd_rec = "rec -q -V0 -t raw -b 16 -c 1 -e s -r 44100 - ";
 
     fp_rec = popen(cmd_rec, "r");
     if(fp_rec == NULL){
@@ -31,8 +31,9 @@ void record(int s){
     }
 
     unsigned char buffer_rec[N];
-
     clock_t start_time = clock();
+
+    printf("\033[2JNOW RECORDING...\n\n");
     while(1){
         clock_t current_time = clock();
         double elapsed_time = (double)(current_time - start_time) / CLOCKS_PER_SEC;
@@ -45,9 +46,13 @@ void record(int s){
             exit(1);
         }
         send(s, buffer_rec, N, 0);
+
+        printf("\033[1A\033[2K");
+        printf("REMAINING: %.2f s\n", 10.0-elapsed_time);
     }
     char eof = 26;
     send(s,&eof,0,0);
+    printf("\033[2JYOUR MESSAGE HAS BEEN SENT.\n");
     fclose(fp_rec);
 }
 
@@ -56,16 +61,14 @@ void *call_thread(void *arg) {
     int s = thread_arg->s;
     int *flag = thread_arg->flag;
 
-    FILE *fp_play;
-    char *cmd_play = "play ./audio/yobidasi.wav repeat 1";
     pid_t pid;
 
     while(1){
         if(*flag == 0){
-            printf("電話を開始しますか？\nYES\n");
+            printf("\033[2JPRESS ENTER TO START A CALL\n");
             char data[5] = "call";
             char c[10];
-            scanf("%s", c);
+            fgets(c, 10, stdin);
             strcpy(thread_arg->input, c);
             if(*flag == 2){
                 *flag = 4;
@@ -80,10 +83,11 @@ void *call_thread(void *arg) {
             }
             if (pid == 0) {
                 // 子プロセス: sox playコマンドを実行
-                execlp("play", "play", "-q", "./audio/yobidasi.wav", "repeat", "10", (char *)NULL);
+                execlp("play", "play", "-q", "-V0" ,"./audio/yobidasi.wav", "repeat", "10",  (char *)NULL);
                 perror("execlp");
                 exit(EXIT_FAILURE);
             } else {
+                printf("\033[2JNOW CALLING...\n");
                 while (*flag != 4) {
                     usleep(200*1000);
                 }
@@ -92,7 +96,7 @@ void *call_thread(void *arg) {
             }
             *flag = 1;
             if(!strcmp(thread_arg->input, "rejected")){ //rejectされた
-                printf("応答が拒否されました、録音を開始いたします。\n");
+                printf("\033[2JYOU GOT NO RESPONSE. LEAVE A MESSAGE.\n");
                 record(s);
                 //*flag = 0;
                 exit(EXIT_SUCCESS);
