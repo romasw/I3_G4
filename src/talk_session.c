@@ -77,7 +77,7 @@ void talk_session(int s){
 
     TALK_THREAD_ARG thread_arg = {s};
 
-    printf("\033[2JTALK STARTED.");
+    printf("\033[2JTALK STARTED.\n");
 
     if(pthread_create(&thread_rec_send, NULL, rec_send_thread, (void *)&thread_arg) != 0) {
         printf("\033[2JFailed to create rec_send_thread.\n");
