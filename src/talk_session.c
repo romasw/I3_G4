@@ -2,10 +2,28 @@
 #include <stdlib.h>
 #include <sys/socket.h>
 #include <pthread.h>
+#include <signal.h>
+#include <sys/wait.h>
 
 typedef struct thread_arg { 
     int s;
 } TALK_THREAD_ARG;
+
+typedef struct horyu_thread_arg { 
+    int *isHoryu;
+} HORYU_THREAD_ARG;
+
+void *trigger_horyu(void *arg){
+    HORYU_THREAD_ARG *thread_arg = (HORYU_THREAD_ARG *)arg;
+    int *isHoryu = thread_arg->isHoryu;
+
+    while(1){
+        char c = getchar();
+        if(c == 'h'){
+            *isHoryu = !*isHoryu;
+        }
+    }
+}
 
 void *rec_send_thread(void *arg) {
     TALK_THREAD_ARG *thread_arg = (TALK_THREAD_ARG *)arg;
@@ -18,22 +36,66 @@ void *rec_send_thread(void *arg) {
         perror("popen");
         exit(EXIT_FAILURE);
     }
+    FILE *fp_horyu;
+    fp_horyu = fopen("./audio/horyu_on.raw", "r");
+    if(fp_horyu == NULL){
+        perror("fopen");
+        exit(EXIT_FAILURE);
+    }
 
     int N = 1024;
-    unsigned char buffer_rec[N];
+    unsigned char buffer_rec[N], buffer_horyu[N];
+
+    int isHoryu = 0;
+    pthread_t thread_horyu;
+
+    HORYU_THREAD_ARG horyu_thread_arg;
+    horyu_thread_arg.isHoryu = &isHoryu;
+
+    if(pthread_create(&thread_horyu, NULL, trigger_horyu, (void *)&horyu_thread_arg) != 0) {
+        printf("Failed to create horyu_thread.\n");
+        exit(EXIT_FAILURE);
+    }
+
+
+    
     while(1){
-        int n = fread(buffer_rec, 1, N, fp_rec);
-        if(n == -1){
-            perror("read");
-            exit(EXIT_FAILURE);
+        if(isHoryu){
+            int n = fread(buffer_horyu, 1, N, fp_rec);
+            if(n == -1){
+                perror("read");
+                exit(EXIT_FAILURE);
+            }
+            if(n == 0){
+                fclose(fp_horyu);
+                fp_horyu = fopen("./audio/horyu_on.raw", "r");
+                if(fp_horyu == NULL){
+                    perror("fopen");
+                    exit(EXIT_FAILURE);
+                }
+            }
+            else{
+                n = send(s, buffer_rec, n, 0);
+                if(n == -1){
+                    perror("send"); 
+                    exit(EXIT_FAILURE);
+                }
+            }
         }
-        if(n == 0){
-            break;
-        }
-        n = send(s, buffer_rec, n, 0);
-        if(n == -1){
-            perror("send"); 
-            exit(EXIT_FAILURE);
+        else{
+            int n = fread(buffer_rec, 1, N, fp_rec);
+            if(n == -1){
+                perror("read");
+                exit(EXIT_FAILURE);
+            }
+            if(n == 0){
+                break;
+            }
+            n = send(s, buffer_rec, n, 0);
+            if(n == -1){
+                perror("send"); 
+                exit(EXIT_FAILURE);
+            }
         }
     }
     fclose(fp_rec);
