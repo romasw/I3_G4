@@ -6,7 +6,25 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <signal.h>
-#include <wait.h>
+#include <sys/wait.h>
+#include <fcntl.h>
+
+void receive_record(int s){
+    //make file for store reording
+    char filename[] = "REC.raw";
+    int fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
+    if (fd == -1) {
+        perror("open");
+    }
+    int N = 1024;
+    unsigned char buffer_rec[N];
+    while(1){
+        int n = recv(s, buffer_rec, N, 0);
+        if(n==0){break;}
+        write(fd,buffer_rec,N);
+    }
+    close(fd);
+}
 
 void *wait_thread(void *arg) {
     THREAD_ARG *thread_arg = (THREAD_ARG *)arg;
@@ -55,7 +73,7 @@ void *wait_thread(void *arg) {
                 }// yes: break and start a call
                 else{
                     send(s, sample_no, strlen(sample_no), 0);// no: send the message
-                    *flag = 0;
+                    *flag = 5;//receive from record and make file
                 }
             }
             if(n == -1){// error handling
@@ -64,6 +82,10 @@ void *wait_thread(void *arg) {
             }
         }else if(*flag == 3){
             break;
+        }else if(*flag == 5){
+            receive_record(s);
+            //*flag = 0;
+            exit(EXIT_SUCCESS);
         }
     }
     return NULL;
