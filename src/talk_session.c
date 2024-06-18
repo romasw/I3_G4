@@ -77,15 +77,15 @@ void talk_session(int s){
 
     TALK_THREAD_ARG thread_arg = {s};
 
-    printf("TALK STARTED.");
+    printf("\033[2JTALK STARTED.");
 
     if(pthread_create(&thread_rec_send, NULL, rec_send_thread, (void *)&thread_arg) != 0) {
-        printf("Failed to create rec_send_thread.\n");
+        printf("\033[2JFailed to create rec_send_thread.\n");
         exit(EXIT_FAILURE);
     }
 
     if(pthread_create(&thread_recv_play, NULL, recv_play_thread, (void *)&thread_arg) != 0) {
-        printf("Failed to create recv_play_thread.\n");
+        printf("\033[2JFailed to create recv_play_thread.\n");
         exit(EXIT_FAILURE);
     }
 

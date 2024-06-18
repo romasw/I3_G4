@@ -18,7 +18,7 @@ void record(int s){
     fp_play = popen(cmd_play, "r");
 
     //popen("play ")録音メッセージを流す
-    printf("RECORDING STARTS IN 5 SECONDS.\n");
+    printf("033[2JRECORDING STARTS IN 5 SECONDS.\n");
     sleep(5);
 
     //control file for popen
@@ -48,7 +48,7 @@ void record(int s){
     }
     char eof = 26;
     send(s,&eof,0,0);
-    printf("YOUR MESSAGE HAS BEEN SENT.\n");
+    printf("\033[2JYOUR MESSAGE HAS BEEN SENT.\n");
     fclose(fp_rec);
 }
 
@@ -61,7 +61,7 @@ void *call_thread(void *arg) {
 
     while(1){
         if(*flag == 0){
-            printf("PRESS ENTER TO START A CALL\n");
+            printf("033[2JPRESS ENTER TO START A CALL\n");
             char data[5] = "call";
             char c[10];
             fgets(c, 10, stdin);
@@ -83,7 +83,7 @@ void *call_thread(void *arg) {
                 perror("execlp");
                 exit(EXIT_FAILURE);
             } else {
-                printf("NOW CALLING...\n");
+                printf("033[2JNOW CALLING...\n");
                 while (*flag != 4) {
                     usleep(200*1000);
                 }
@@ -92,7 +92,7 @@ void *call_thread(void *arg) {
             }
             *flag = 1;
             if(!strcmp(thread_arg->input, "rejected")){ //rejectされた
-                printf("YOU GOT NO RESPONSE. LEAVE A MESSAGE.\n");
+                printf("\033[2JYOU GOT NO RESPONSE. LEAVE A MESSAGE.\n");
                 record(s);
                 //*flag = 0;
                 exit(EXIT_SUCCESS);
