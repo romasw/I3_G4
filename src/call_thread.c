@@ -83,7 +83,7 @@ void *call_thread(void *arg) {
             }
             if (pid == 0) {
                 // 子プロセス: sox playコマンドを実行
-                execlp("play", "play", "-q", "-V0" ,"./audio/yobidasi.wav", "repeat", "10",  (char *)NULL);
+                execlp("play", "play", "-q", "-V0" ,"./audio/chakusin_up.wav", "repeat", "10",  (char *)NULL);
                 perror("execlp");
                 exit(EXIT_FAILURE);
             } else {
