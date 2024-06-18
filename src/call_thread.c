@@ -14,7 +14,7 @@
 void record(int s){
     int N = 1024;
     FILE *fp_play;
-    char *cmd_play = "play -t raw -b 16 -c 1 -e s -r 44100 audio/wait.raw ";
+    char *cmd_play = "play -q -t raw -b 16 -c 1 -e s -r 44100 audio/wait.raw ";
     fp_play = popen(cmd_play, "r");
 
     //popen("play ")録音メッセージを流す
@@ -23,7 +23,7 @@ void record(int s){
 
     //control file for popen
     FILE *fp_rec;
-    char *cmd_rec = "rec -t raw -b 16 -c 1 -e s -r 44100 - ";
+    char *cmd_rec = "rec -q -t raw -b 16 -c 1 -e s -r 44100 - ";
 
     fp_rec = popen(cmd_rec, "r");
     if(fp_rec == NULL){
@@ -56,8 +56,6 @@ void *call_thread(void *arg) {
     int s = thread_arg->s;
     int *flag = thread_arg->flag;
 
-    FILE *fp_play;
-    char *cmd_play = "play ./audio/yobidasi.wav repeat 1";
     pid_t pid;
 
     while(1){
@@ -80,7 +78,7 @@ void *call_thread(void *arg) {
             }
             if (pid == 0) {
                 // 子プロセス: sox playコマンドを実行
-                execlp("play", "play", "-q", "./audio/yobidasi.wav", "repeat", "10", (char *)NULL);
+                execlp("play", "play", "-q", "./audio/yobidasi.wav", "repeat", "10",  (char *)NULL);
                 perror("execlp");
                 exit(EXIT_FAILURE);
             } else {
