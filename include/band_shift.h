@@ -1,3 +1,3 @@
 #pragma once
 
-void band_shift(unsigned char *input_buf, unsigned char *output_buf, long n, int shift);
+void band_shift(short *input_buf, short *output_buf, long n, int shift);
