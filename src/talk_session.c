@@ -48,7 +48,7 @@ void *rec_send_thread(void *arg) {
   }
 
   FILE *fp_horyu;
-  fp_horyu = fopen("./audio/horyu_on.raw", "rb");
+  fp_horyu = fopen("./audio/horyuu.raw", "rb");
   if (fp_horyu == NULL) {
     perror("fopen");
     exit(EXIT_FAILURE);
@@ -86,7 +86,7 @@ void *rec_send_thread(void *arg) {
       n = fread(buffer_rec_out, sizeof(short), N, fp_horyu);
       if (n == 0) {
         fclose(fp_horyu);
-        fp_horyu = fopen("./audio/horyu_on.raw", "rb");
+        fp_horyu = fopen("./audio/horyuu.raw", "rb");
         if (fp_horyu == NULL) {
           perror("fopen");
           exit(EXIT_FAILURE);
