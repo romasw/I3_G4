@@ -69,7 +69,7 @@ void *call_thread(void *arg) {
     while(1){
         if(*flag == 0){
             printf("\033[H\033[J");
-            printf("PRESS ENTER TO START A CALL\n");
+            printf("PRESS ENTER TO START A CALL.\n");
             char data[5] = "call";
             char c[10];
             fgets(c, 10, stdin);
