@@ -55,7 +55,6 @@ void *rec_send_thread(void *arg) {
   }
 
   int N = 1024;
-  short buffer_horyu[N];
 
   int isHoryu = 0;
   pthread_t thread_horyu;
@@ -83,7 +82,7 @@ void *rec_send_thread(void *arg) {
     printf("\033[2;1H\033[2K");
     if (isHoryu) {
       printf("(PRESS H TO TAKE OFF HOLD / PRESS Q TO QUIT THE CALL)\n");
-      n = fread(buffer_rec_out, sizeof(short), N, fp_horyu);
+      n = fread(buffer_rec_out, sizeof(char), N, fp_horyu);
       if (n == 0) {
         fclose(fp_horyu);
         fp_horyu = fopen("./audio/horyuu.raw", "rb");
@@ -124,6 +123,7 @@ void *recv_play_thread(void *arg) {
   while (1) {
     int n = recv(s, buffer_play, N, 0);
     if (n == -1) {
+      system("/bin/stty cooked");
       perror("recv");
       exit(EXIT_FAILURE);
     }
