@@ -1,6 +1,14 @@
 CC = gcc
 TARGET = i1i2i3_phone
 OBJS = src/main.o src/call_thread.o src/wait_thread.o src/setup.o src/talk_session.o src/band_shift.o
+BIN_DIR = ./bin
+
+all: $(BIN_DIR) $(TARGET)
+
+$(BIN_DIR): $(wildcard *.o)
+	@if [ ! -d $(BIN_DIR) ]; then \
+        echo ";; mkdir $(BIN_DIR)"; mkdir $(BIN_DIR); \
+    fi
 
 $(TARGET): $(OBJS)
 	$(CC) -I./include -o bin/$@ $(OBJS) -lm
