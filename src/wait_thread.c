@@ -31,7 +31,7 @@ void receive_record(int s) {
 void *wait_thread(void *arg) {
   THREAD_ARG *thread_arg = (THREAD_ARG *)arg;
   int s = thread_arg->s;
-  int *flag = thread_arg->flag;
+  int *state = thread_arg->state;
   int n;
   char buffer[10];
   char sample_yes[9] = "accepted";
@@ -40,17 +40,17 @@ void *wait_thread(void *arg) {
   pid_t pid;
 
   while (1) {
-    if (*flag == 0) {
+    if (*state == 0) {
       n = recv(s, buffer, 10, 0);
-      if (*flag == 1) {
+      if (*state == 1) {
         strcpy(thread_arg->input, buffer);
-        *flag = 4;
+        *state = 4;
         continue;
       }
       if (!strcmp(buffer, "call")) { // wait for the call
         printf("\033[0;0H\033[0J");
         printf("YOU HAVE AN INCOMING CALL.\nANSWER THE CALL?(yes/no)\n");
-        *flag = 2;
+        *state = 2;
         pid = fork();
         if (pid == -1) {
           perror("fork");
@@ -63,37 +63,37 @@ void *wait_thread(void *arg) {
           perror("execlp");
           exit(EXIT_FAILURE);
         } else {
-          while (*flag != 4) {
+          while (*state != 4) {
             usleep(10 * 1000);
           }
           kill(pid, SIGTERM); // 子プロセスを停止
           wait(NULL);
         }
-        *flag = 2;
+        *state = 2;
         if (!strcmp(thread_arg->input, "yes\n")) {
           send(s, sample_yes, strlen(sample_yes), 0);
-          *flag = 3;
+          *state = 3;
           usleep(400 * 1000);
           break;
         } // yes: break and start a call
         else {
           send(s, sample_no, strlen(sample_no), 0); // no: send the message
-          *flag = 5; // receive from record and make file
+          *state = 5; // receive from record and make file
         }
       }
       if (n == -1) { // error handling
         perror("read");
         exit(EXIT_FAILURE);
       }
-    } else if (*flag == 3) {
+    } else if (*state == 3) {
       break;
-    } else if (*flag == 5) {
+    } else if (*state == 5) {
       printf("\033[0;0H\033[0J");
       printf("PLEASE WAIT UNTIL YOU GOT A MESSAAGE.\n");
       receive_record(s);
       printf("\033[0;0H\033[0J");
       printf("YOU GOT A MESSAGE. THE MESSAGE HAS BEEN SAVED.\n");
-      //*flag = 0;
+      //*state = 0;
       exit(EXIT_SUCCESS);
     }
   }

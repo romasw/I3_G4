@@ -22,11 +22,19 @@ int main(int argc, char ** argv){
 
     pthread_t thread_call, thread_wait;
 
-    int flag = 0;
-    int *pflag = &flag;
+    /* state
+    0: nothing received
+    1: called by me
+    2: called by the other one
+    3: call connected
+    4: input received
+    5: wait for recorded message
+    */
+    int state = 0;
+    int *pstate = &state;
     
     THREAD_ARG thread_arg;
-    thread_arg.flag = pflag;
+    thread_arg.state = pstate;
     thread_arg.s = s;
     strcpy(thread_arg.input, "");
 

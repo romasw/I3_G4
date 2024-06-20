@@ -2,6 +2,6 @@
 
 typedef struct thread_arg { 
     int s;
-    int *flag;
+    int *state;
     char input[256];
 } THREAD_ARG;

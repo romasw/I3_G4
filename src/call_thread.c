@@ -62,23 +62,23 @@ void record(int s){
 void *call_thread(void *arg) {
     THREAD_ARG *thread_arg = (THREAD_ARG *)arg;
     int s = thread_arg->s;
-    int *flag = thread_arg->flag;
+    int *state = thread_arg->state;
 
     pid_t pid;
 
     while(1){
-        if(*flag == 0){
+        if(*state == 0){
             printf("\033[H\033[J");
             printf("PRESS ENTER TO START A CALL.\n");
             char data[5] = "call";
             char c[10];
             fgets(c, 10, stdin);
             strcpy(thread_arg->input, c);
-            if(*flag == 2){
-                *flag = 4;
+            if(*state == 2){
+                *state = 4;
                 continue;
             }
-            *flag = 1;
+            *state = 1;
             send(s, data, 5, 0);
             pid = fork();
             if (pid == -1) {
@@ -93,25 +93,25 @@ void *call_thread(void *arg) {
             } else {
                 printf("\033[H\033[J");
                 printf("NOW CALLING...\n");
-                while (*flag != 4) {
+                while (*state != 4) {
                     usleep(10*1000);
                 }
                 kill(pid, SIGTERM); // 子プロセスを停止
                 wait(NULL);
             }
-            *flag = 1;
+            *state = 1;
             if(!strcmp(thread_arg->input, "rejected")){ //rejectされた
                 printf("\033[H\033[J");
                 printf("YOU GOT NO RESPONSE. LEAVE A MESSAGE.\n");
                 record(s);
-                //*flag = 0;
+                //*state = 0;
                 exit(EXIT_SUCCESS);
             }else if(!strcmp(thread_arg->input, "accepted")){ //acceptされた
-                *flag = 3;
+                *state = 3;
                 break;
             }
         }
-        else if(*flag == 3){
+        else if(*state == 3){
             break;
         }
     }
